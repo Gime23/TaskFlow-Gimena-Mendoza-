@@ -38,11 +38,11 @@ import { useEffect } from 'react';
           };
         }) 
 
-        console.log('Tareas recibidas de Firestore:', taskList);
+        
         dispatch(setTasks(taskList));
       },
       (error) => {
-        console.log('Error consultando tareas:', error);
+       
       }
     );
 
@@ -54,7 +54,7 @@ import { useEffect } from 'react';
     const userId = user?.uid || user?.localId || user?.email;
 
     if (!user || !userId) {
-      console.log('No hay usuario autenticado');
+     
       return;
     }
 
@@ -65,9 +65,9 @@ import { useEffect } from 'react';
         userId: userId,
         createdAt: new Date().toISOString(),
       });
-      console.log('Tarea guardada exitosamente');
+      
     } catch (error) {
-      console.log('Error al guardar tarea:', error);
+     
     }
   };
 
@@ -77,7 +77,7 @@ import { useEffect } from 'react';
     try {
       await deleteDoc(doc(db, 'tasks', id));
     } catch (error) {
-      console.log('Error al eliminar tarea:', error);
+     
     }
   }; // <--- Cierra deleteTaskFromFirestore
 
@@ -88,7 +88,7 @@ import { useEffect } from 'react';
         completed: !currentStatus,
       });
     } catch (error) {
-      console.log('Error al actualizar tarea:', error);
+      
     }
   }; // <--- Cierra toggleTaskInFirestore
 
