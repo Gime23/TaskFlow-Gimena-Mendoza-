@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect } from 'react';
+import { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,17 +12,31 @@ import {
 import { useSelector } from 'react-redux';
 import { useFirestoreTasks } from '../hooks/usefirestoretasks';
 
-export default function TaskListScreen() {
+export default function TaskListScreen({ navigation }) {
   const [taskText, setTaskText] = useState('');
-  // Redux sigue leyendo las tareas que useFirestoreTasks sincroniza en tiempo real
   const tasks = useSelector((state) => state.tasks.items);
 
-  // Funciones que conectan con Firestore
   const {
     addTaskToFirestore,
     deleteTaskFromFirestore,
     toggleTaskInFirestore,
   } = useFirestoreTasks();
+
+  // Agrega el botón de Perfil en la barra superior (Header)
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('Profile')}
+          style={{ marginRight: 10 }}
+        >
+          <Text style={{ color: '#007bff', fontWeight: 'bold', fontSize: 16 }}>
+            Perfil
+          </Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   const handleAddTask = async () => {
     if (taskText.trim() === '') {
@@ -58,9 +73,20 @@ export default function TaskListScreen() {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.taskCard}>
+              {/* Checkbox / Toggle completado */}
+              <TouchableOpacity
+                onPress={() => toggleTaskInFirestore(item.id, item.completed)}
+                style={{ marginRight: 10 }}
+              >
+                <Text style={{ fontSize: 18 }}>
+                  {item.completed ? '✅' : '⬜'}
+                </Text>
+              </TouchableOpacity>
+
+              {/* Tocar el texto navega al Detalle de Tarea */}
               <TouchableOpacity
                 style={{ flex: 1 }}
-                onPress={() => toggleTaskInFirestore(item.id, item.completed)}
+                onPress={() => navigation.navigate('TaskDetail', { task: item })}
               >
                 <Text
                   style={[
@@ -72,6 +98,7 @@ export default function TaskListScreen() {
                 </Text>
               </TouchableOpacity>
 
+              {/* Botón eliminar */}
               <TouchableOpacity
                 style={styles.deleteButton}
                 onPress={() => deleteTaskFromFirestore(item.id)}

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAvatarUri, logout } from '../store/authslice';
@@ -12,7 +13,6 @@ export default function ProfileScreen() {
 
   const pickImage = async () => {
     try {
-      // Solicita permiso de galería
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
       
       if (!permissionResult.granted) {
@@ -21,7 +21,7 @@ export default function ProfileScreen() {
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.8,
@@ -31,13 +31,17 @@ export default function ProfileScreen() {
         dispatch(setAvatarUri(result.assets[0].uri));
       }
     } catch (error) {
-      //console.log("Error al seleccionar imagen:", error);
+      // Manejo silencioso de errores
     }
   };
 
   const handleLogout = async () => {
-    await signOut(auth);
-    dispatch(logout());
+    try {
+      await signOut(auth);
+      dispatch(logout());
+    } catch (error) {
+      alert('Error al cerrar sesión');
+    }
   };
 
   return (
