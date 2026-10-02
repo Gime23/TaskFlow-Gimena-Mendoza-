@@ -19,7 +19,7 @@ export const useFirestoreTasks = () => {
 
   // 1. Escuchar tareas del usuario en tiempo real
   useEffect(() => {
-    if (!user) return;
+    if (!user || !user.uid) return;
 
     const q = query(
       collection(db, 'tasks'),
@@ -45,7 +45,7 @@ export const useFirestoreTasks = () => {
 
   // 2. Agregar tarea a Firestore
   const addTaskToFirestore = async (text) => {
-    if (!user) return;
+    if (!user || !user.uid) return;
     try {
       await addDoc(collection(db, 'tasks'), {
         text,
