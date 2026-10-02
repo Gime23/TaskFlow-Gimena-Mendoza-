@@ -14,6 +14,14 @@ Aplicación móvil desarrollada con **React Native** y **Expo** para la gestión
 
 ---
 
+## 📱 Demostración de la Aplicación
+
+| Login | Lista de Tareas | Crear / Detalle | Perfil con Foto |
+| :---: | :---: | :---: | :---: |
+| <img src="./docs/login.jpg" width="200" /> | <img src="./docs/lista.jpg" width="200" /> | <img src="./docs/tarea.jpg" width="200" /> | <img src="./docs/perfilimagen.jpg" width="200" /> |
+
+---
+
 ## 🛠️ Tecnologías Utilizadas
 
 * **React Native** & **Expo**
