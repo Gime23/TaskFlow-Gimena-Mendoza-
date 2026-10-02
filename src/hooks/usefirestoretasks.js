@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
+import { useEffect } from 'react'; 
+ import { useDispatch, useSelector } from 'react-redux';
+ import {
   collection,
   query,
   where,
@@ -9,30 +9,36 @@ import {
   deleteDoc,
   doc,
   updateDoc,
-} from 'firebase/firestore';
-import { db } from '../firebase/config';
-import { setTasks } from '../store/taskslice';
+ } from 'firebase/firestore';
+ import { db } from '../firebase/config';
+ import { setTasks } from '../store/taskslice';
 
-export const useFirestoreTasks = () => {
-  const dispatch = useDispatch();
+ export const useFirestoreTasks = () => {
+  const dispatch = useDispatch ();
   const user = useSelector((state) => state.auth.user);
 
-  // 1. Escuchar tareas del usuario en tiempo real
   useEffect(() => {
-    if (!user || !user.uid) return;
+    const userId = user?.uid || user?.localId || user?.email;
+    if (!user || !userId) return;
 
     const q = query(
       collection(db, 'tasks'),
-      where('userId', '==', user.uid)
+      where('userId', '==', userId)
     );
 
     const unsubscribe = onSnapshot(
       q,
-      (snapshot) => {
-        const taskList = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+      (snapshot) => { // <--- AQUÍ DEBE ESTAR (snapshot)
+        const taskList = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            text: data.text || data.name || '',
+          };
+        }) 
+
+        console.log('Tareas recibidas de Firestore:', taskList);
         dispatch(setTasks(taskList));
       },
       (error) => {
@@ -43,29 +49,37 @@ export const useFirestoreTasks = () => {
     return () => unsubscribe();
   }, [user]);
 
-  // 2. Agregar tarea a Firestore
+  
   const addTaskToFirestore = async (text) => {
-    if (!user || !user.uid) return;
+    const userId = user?.uid || user?.localId || user?.email;
+
+    if (!user || !userId) {
+      console.log('No hay usuario autenticado');
+      return;
+    }
+
     try {
       await addDoc(collection(db, 'tasks'), {
-        text,
+        text: text,
         completed: false,
-        userId: user.uid,
-        createdAt: new Date(),
+        userId: userId,
+        createdAt: new Date().toISOString(),
       });
+      console.log('Tarea guardada exitosamente');
     } catch (error) {
       console.log('Error al guardar tarea:', error);
     }
   };
 
-  // 3. Eliminar tarea de Firestore
+
+// 3. Eliminar tarea de Firestore
   const deleteTaskFromFirestore = async (id) => {
     try {
       await deleteDoc(doc(db, 'tasks', id));
     } catch (error) {
       console.log('Error al eliminar tarea:', error);
     }
-  };
+  }; // <--- Cierra deleteTaskFromFirestore
 
   // 4. Cambiar estado completado/pendiente en Firestore
   const toggleTaskInFirestore = async (id, currentStatus) => {
@@ -76,11 +90,11 @@ export const useFirestoreTasks = () => {
     } catch (error) {
       console.log('Error al actualizar tarea:', error);
     }
-  };
+  }; // <--- Cierra toggleTaskInFirestore
 
   return {
     addTaskToFirestore,
     deleteTaskFromFirestore,
     toggleTaskInFirestore,
   };
-};
+}; // <--- Cierra useFirestoreTasks
