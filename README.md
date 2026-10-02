@@ -1,16 +1,32 @@
-# TaskFlow - Aplicación Móvil de Gestión de Tareas
+# Aplicación de Gestión de Tareas (TaskApp)
 
-Aplicación desarrollada con React Native, Expo, Redux Toolkit y Firebase.
+Aplicación móvil desarrollada con **React Native** y **Expo** para la gestión de tareas personales, con soporte para autenticación de usuarios, persistencia en la nube y personalización de perfil.
 
-## Funcionalidades
-- Autenticación con Firebase (Registro e Inicio de sesión).
-- Gestión de tareas en tiempo real sincronizada con Firestore.
-- Estado global con Redux Toolkit.
-- Selección de foto de perfil con Expo ImagePicker.
+---
 
-## Pasos para ejecutar el proyecto
+## 🚀 Características Principales
 
-1. Clonar el repositorio.
-2. Instalar dependencias:
+* **Autenticación con Firebase:** Registro, inicio de sesión y cierre de sesión seguro (`Email/Password`).
+* **Gestión de Tareas (CRUD):** Crear, listar, marcar como completadas y eliminar tareas sincronizadas en tiempo real con **Cloud Firestore**.
+* **Detalle de Tarea:** Navegación a la vista de detalle de cada tarea seleccionada.
+* **Perfil de Usuario:** Selección y previsualización de foto de perfil desde la galería o cámara con `expo-image-picker`.
+* **Manejo de Estado Global:** Gestión de la sesión del usuario y tareas mediante **Redux Toolkit**.
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+* **React Native** & **Expo**
+* **React Navigation** (Stack Navigation)
+* **Redux Toolkit**
+* **Firebase** (Authentication & Cloud Firestore)
+* **Expo ImagePicker**
+
+---
+
+## 📦 Instalación y Configuración
+
+1. **Clonar el repositorio:**
    ```bash
-   npm install
+   git clone <URL_DE_TU_REPOSITORIO>
+   cd proyectofinalapp
